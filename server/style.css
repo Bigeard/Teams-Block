@@ -63,21 +63,11 @@ input {
 	border-radius: 5px;
 }
 
-#container {
-	position: relative;
-}
 
-#containDate {
-	position: absolute;
-	top: 20px;
-	left: 20px;
-}
-#date {
-	font-weight: bold;
-}
+
 .logo {
 	position: absolute;
-	top: 10px;
+	top: 13px;
 	left: 30px;
 	width: 50px;
 }
@@ -105,17 +95,33 @@ input {
 	height: 90vh;
 	display: flex;
 	justify-content: center;
-	padding-top: 2rem;
+	padding-top: 3rem;
+	position: relative;
+}
+
+#containDate {
+	position: absolute;
+	top: 20px;
+	left: 20px;
+}
+
+#date {
+	font-weight: bold;
 }
 
 #text {
 	height: 80vh;
 	width: 53vh;
 	background-color: #FFF;
-	padding: 2rem 2.5rem;
-	font-size: .8rem;
-	line-height: 20px;
-	overflow-y: scroll;
+	padding: 3rem;
+	font-size: 1.7vh;
+	line-height: 3vh;
+	/*overflow-y: scroll;*/
 	box-shadow: var(--light-shadow);
 }
 
+@media screen and (max-width: 700px) {
+	.logo {
+		display: none;
+	}
+}

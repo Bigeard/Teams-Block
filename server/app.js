@@ -1,24 +1,42 @@
-let i = 0;
+//Initialisation
+let id = 1;
+callData();
+
+
+
+
+// récupération des données
+function callData() {
+	document.querySelector('#actualPage').value = id;
+	fetch(`http://localhost:3000/page/${id}`)
+	.then(r => r.json())
+	.then(data => {
+		document.querySelector('#date').innerHTML = data.date;
+		document.querySelector('#text').innerHTML = data.text;
+	});
+}
+
+
+
+// Récupérer le numéro de la page rentré à la main
+document.querySelector('#actualPage').addEventListener('keyup', (event)=>{
+	if (event.key === "Enter") {
+		id = document.querySelector('#actualPage').value;
+		callData();
+	}
+});
 
 
 document.querySelector('#previousButton').addEventListener('click', ()=>{
-	i = i-1;
-	document.querySelector('#actualPage').value = i;
+	id = id-1;
+	callData();
 });
 
 document.querySelector('#nextButton').addEventListener('click', ()=>{
-	i = i+1;
-	document.querySelector('#actualPage').value = i;
+	id = id+1;
+	callData();
 });
 
 
 
 
-db.get(`SELECT data FROM bloc WHERE id='${range}';`, (err, result) => {
-	if (err) {
-		console.log(err);
-	}
-	else {
-		//result
-	}
-})
