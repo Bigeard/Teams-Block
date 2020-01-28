@@ -1,61 +1,102 @@
 const crypto = require('crypto');
+const { db } = require('../utils/db');
 
 class Block {
-    constructor(id, previousBlockHash, previousProof, data) {
-        this.id = id;
-        this.proof = previousProof;
-        this.previousBlockHash = previousBlockHash;
-        this.data = data;
-        this.timestamp = Date.now();
-    }
+  constructor(id, previousBlockHash, previousProof, data, nonce) {
+    this.id = id;
+    this.proof = previousProof;
+    this.hash = this.hashValue()
+    this.previousBlockHash = previousBlockHash;
+    this.data = data;
+    this.timestamp = Date.now();
+    this.nonce = nonce;
 
-	hashValue() {
-	const { id, proof, data, timestamp } = this;
-	const blockString= `${id}-${proof}-${JSON.stringify(data)}-${timestamp}`;
-	const hashFunction = crypto.createHash('sha256');
-	hashFunction.update(blockString);
-	return hashFunction.digest('hex');
-	}
+    
+    const select = `SELECT * FROM blockchain WHERE id = ?;`
+    db.all(select, [this.id], (err, rows) => {
+      if (err) {
+        throw err;
+      }
+      if (!rows[0]) {
+        const insert = db.prepare(
+          `INSERT INTO blockchain (id, hash, previous_hash, timestamp, contributing_node, data) VALUES (?,?,?,?,?,?)`
+        );
 
-	setProof(proof) {
-	this.proof = proof;
-	}
+        insert.run(
+          this.id,
+          this.hash,
+          this.previousBlockHash,
+          this.timestamp,
+          1,
+          JSON.stringify(this.data)
+        );
+      }
+    });
+  }
 
-	getProof() {
-	return this.proof;
-	}
+  hashValue() {
+    const { id, proof, data, timestamp } = this;    
+    const blockString= `${id}-${data}`;
+    const hashFunction = crypto.createHash('sha256');
+    hashFunction.update(blockString);
+    return hashFunction.digest('hex');
+  }
 
-	getId() {
-	return this.id;
-	}
+  setProof(proof) {
+    this.proof = proof;
+  }
 
-	getPreviousBlockHash() {
-	return this.previousBlockHash;
-	}
+  getProof() {
+    return this.proof;
+  }
 
+  getHash() {
+    return this.hash;
+  }
 
-	getDetails() {
-	const { id, proof, previousBlockHash, data, timestamp } = this;
-	return {
-	  id,
-	  proof,
-	  timestamp,
-	  previousBlockHash,
-	  data: data.map(data => data),
-	};
-	}
+  getNonce() {
+    return this.nonce;
+  }
 
-	parseBlock(block) {
-	this.id = block.id;
-	this.proof = block.proof;
-	this.previousBlockHash = block.previousBlockHash;
-	this.timestamp = block.timestamp;
-	return block.data
-	}
+  getId() {
+    return this.id;
+  }
 
-	Datas() {
-	this.data.forEach(data => console.log(data));
-	}
-	}
+  getPreviousBlockHash() {
+    return this.previousBlockHash;
+  }
 
-	module.exports = Block;
+  mineBlock(difficulty) {
+    // while(this.hash.substring(0, difficulty) !== Array(difficulty + 1).join("0")) {
+    //     this.hash = this.hashValue();
+    //     this.nonce++;
+    // }
+    console.log("Block mined..." + this.hash);
+  }
+
+  getDetails() {
+    const { id, proof, hash, previousBlockHash, data, timestamp } = this;
+    return {
+      id,
+      proof,
+      hash,
+      previousBlockHash,
+      data,
+      timestamp,
+    };
+  }
+
+  parseBlock(block) {
+    this.id = block.id;
+    this.proof = block.proof;
+    this.previousBlockHash = block.previousBlockHash;
+    this.timestamp = block.timestamp;
+    return block.data
+  }
+
+  Datas() {
+    this.data.forEach(data => console.log(data));
+  }
+}
+
+module.exports = Block;

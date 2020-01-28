@@ -1,0 +1,12 @@
+{
+  "apps" : [
+    {
+      "name": "Node 1",
+      "script": "./src/server.js",
+      "watch": ["src/"],
+      "env": {
+        "PORT": "5001"
+      }
+    }
+  ]
+}
