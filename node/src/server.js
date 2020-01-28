@@ -17,7 +17,7 @@ function render_page(pageData) {
           if (!isNaN(item.str) && parseInt(item.str)){
             bookJSON.push({
               "text": text,
-              "number": parseInt(item.str)
+              "number": parseInt(item.str) - 4
             })
           } 
           else {
@@ -80,9 +80,10 @@ app.post('/nodes', (req, res) => {
 app.post('/data', (req, res) => {
   let { number } = req.body;
   let data = []
+  number+= 3;
   let num = number;
 
-  for (num; num <= (number+5); num++) {
+  for (num; num <= (number+4); num++) {
     data.push(bookJSON[num-2])
   }
   // blockChain.newData(data);

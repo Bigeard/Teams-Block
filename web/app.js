@@ -1,5 +1,6 @@
 //Initialisation
 let id = 1;
+let numPage = 1;
 callData();
 
 // récupération des données
@@ -9,8 +10,10 @@ function callData() {
     .then(r => r.json())
     .then(data => {
       console.log(data);
-      document.querySelector("#date").innerHTML = data.date;
+      document.querySelector("#date").innerHTML = new Date(data.date).toDateString();
       document.querySelector("#text").innerHTML = data.text;
+      numPage = data.max;
+      document.querySelector("#numPage").innerHTML = `/ ${numPage}`;
     });
 }
 
@@ -23,11 +26,15 @@ document.querySelector("#actualPage").addEventListener("keyup", event => {
 });
 
 document.querySelector("#previousButton").addEventListener("click", () => {
-  id = id - 1;
-  callData();
+  if (id > 1) {
+    id = id - 1;
+    callData();
+  }
 });
 
 document.querySelector("#nextButton").addEventListener("click", () => {
-  id = id + 1;
-  callData();
+  if (id < numPage) {
+    id = id + 1;
+    callData();
+  }
 });
