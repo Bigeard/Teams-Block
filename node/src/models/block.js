@@ -32,3 +32,30 @@ class Block {
 	getPreviousBlockHash() {
 	return this.previousBlockHash;
 	}
+
+
+	getDetails() {
+	const { id, proof, previousBlockHash, data, timestamp } = this;
+	return {
+	  id,
+	  proof,
+	  timestamp,
+	  previousBlockHash,
+	  data: data.map(data => data),
+	};
+	}
+
+	parseBlock(block) {
+	this.id = block.id;
+	this.proof = block.proof;
+	this.previousBlockHash = block.previousBlockHash;
+	this.timestamp = block.timestamp;
+	return block.data
+	}
+
+	Datas() {
+	this.data.forEach(data => console.log(data));
+	}
+	}
+
+	module.exports = Block;
