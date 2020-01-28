@@ -43,3 +43,47 @@ class Blockchain {
             }
         }
     }
+
+    lastBlock() {
+        return this.blocks[this.blocks.length - 1];
+    }
+
+    getLength() {
+        return this.blocks.length;
+    }
+
+    checkValidity() {
+        const {
+            blocks
+        } = this;
+        let previousBlock = blocks[0];
+        for (let i = 1; i < blocks.length; i++) {
+            const currentBlock = blocks[i];
+            if (currentBlock.getPreviousBlockHash() !== previousBlock.hashValue()) {
+                return false;
+            }
+            if (!isProofValid(previousBlock.getProof(), currentBlock.getProof())) {
+                return false;
+            }
+            previousBlock = currentBlock;
+        }
+        return true;
+    }
+
+    parseChain(blocks) {
+        this.blocks = blocks.map(block => {
+            const parsedBlock = new Block(0);
+            parsedBlock.parseBlock(block);
+            return parsedBlock;
+        });
+    }
+
+    toArray() {
+        return this.blocks.map(block => block.getDetails());
+    }
+    printBlocks() {
+        this.blocks.forEach(block => console.log(block));
+    }
+}
+
+module.exports = Blockchain;
