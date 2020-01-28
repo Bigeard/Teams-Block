@@ -2,10 +2,31 @@
   "name": "node",
   "version": "1.0.0",
   "description": "",
-  "main": "main.js",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "pm2 startOrReload ecosystem.json --update-env && npm run logs",
+    "logs": "pm2 logs",
+    "kill": "pm2 flush && pm2 kill",
+    "flush": "pm2 flush"
   },
-  "author": "",
-  "license": "ISC"
+  "keywords": [
+    "blockchain",
+    "express",
+    "socket",
+    "websocket"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "pdf-parse": "^1.1.1",
+    "pm2": "^3.2.2",
+    "socket.io": "^2.1.1",
+    "socket.io-client": "^2.1.1",
+    "sqlite3": "^4.1.1"
+  },
+  "devDependencies": {
+    "eslint": "^5.6.0"
+  }
 }
