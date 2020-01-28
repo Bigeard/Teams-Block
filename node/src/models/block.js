@@ -11,17 +11,27 @@ class Block {
     this.timestamp = Date.now();
     this.nonce = nonce;
 
-    const stmt = db.prepare(
-      `INSERT INTO blockchain (id, hash, previous_hash, timestamp, contributing_node, data) VALUES (?,?,?,?,?,?)`
-    );
-    stmt.run(
-      this.id,
-      this.hash,
-      this.previousBlockHash,
-      this.timestamp,
-      1,
-      JSON.stringify(this.data)
-    );
+    
+    const select = `SELECT * FROM blockchain WHERE id = ?;`
+    db.all(select, [this.id], (err, rows) => {
+      if (err) {
+        throw err;
+      }
+      if (!rows[0]) {
+        const insert = db.prepare(
+          `INSERT INTO blockchain (id, hash, previous_hash, timestamp, contributing_node, data) VALUES (?,?,?,?,?,?)`
+        );
+
+        insert.run(
+          this.id,
+          this.hash,
+          this.previousBlockHash,
+          this.timestamp,
+          1,
+          JSON.stringify(this.data)
+        );
+      }
+    });
   }
 
   hashValue() {
